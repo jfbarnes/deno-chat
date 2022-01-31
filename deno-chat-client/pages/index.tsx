@@ -7,6 +7,7 @@ interface Message {
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [text, setText] = useState("");
 
   const getMessages = useCallback(async () => {
     const res = await fetch("https://jfbarnes-deno-chat-api.deno.dev/messages");
@@ -18,7 +19,27 @@ export default function Home() {
     getMessages();
   }, []);
 
-  return <div>{JSON.stringify(messages)}</div>;
+  const onSendMessage = useCallback(async () => {
+    await fetch("https://jfbarnes-deno-chat-api.deno.dev/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
+  }, [text]);
+
+  return (
+    <div>
+      <div>{JSON.stringify(messages)}</div>
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+      <button onClick={onSendMessage}></button>
+    </div>
+  );
 }
 
 export const config: PageConfig = { runtimeJS: true };
