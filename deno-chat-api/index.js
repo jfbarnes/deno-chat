@@ -1,23 +1,20 @@
 import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 
 const messages = [];
-books.set("1", {
-  id: "1",
-  title: "The Hound of the Baskervilles",
-  author: "Conan Doyle, Arthur",
-});
 
 const router = new Router();
 router
   .get("/", (context) => {
-    context.response.body = "Hello world!";
+    context.response.body = "Chat server!";
   })
-  .get("/book", (context) => {
-    context.response.body = Array.from(books.values());
+  .get("/messages", (context) => {
+    context.response.body = messages;
   })
-  .get("/book/:id", (context) => {
+  .post("/messages", async (context) => {
     if (books.has(context?.params?.id)) {
-      context.response.body = books.get(context.params.id);
+			const message = await context.request.body().value;
+			messages.push(message);
+      context.response.body = messages;
     }
   });
 
