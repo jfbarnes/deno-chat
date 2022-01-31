@@ -27,6 +27,8 @@ export default function Home() {
       },
       body: JSON.stringify({ text }),
     });
+    setText("");
+    getMessages();
   }, [text]);
 
   return (
